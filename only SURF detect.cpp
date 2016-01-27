@@ -24,7 +24,7 @@ int main()
 		return -1;
 
 	cout << srcImage.size() <<endl;
-	Mat imageROI=srcImage(Rect(0,0,3008,2000)); //imageROI : 영역축소이미지
+	Mat imageROI=srcImage(Rect(1300,1100,700,300)); //imageROI : 영역확대이미지
 
 
 	vector<KeyPoint> keypoints;
