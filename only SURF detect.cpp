@@ -24,7 +24,7 @@ int main()
 	
 	imshow("mouseimage",mouseimage);
 	setMouseCallback("mouseimage", onMouse,  (void *)&mouseimage);
-	//resize(mouseimage,mouseimage,Size(1000,800));
+	resize(mouseimage,mouseimage,Size(1504,1000));
 	waitKey();
 
 	int x,y,disx,disy;
@@ -41,14 +41,14 @@ int main()
 		return -1;
 
 	cout << srcImage.size() <<endl;
-	Mat imageROI=srcImage(Rect(x,y,disx,disy)); //imageROI : 영역확대이미지
+	Mat imageROI=srcImage(Rect(x*2,y*2,disx,disy)); //imageROI : 영역확대이미지
 
 
 	vector<KeyPoint> keypoints;
  
 	//SurfFeatureDetector  surF(10);
 	//surF.detect(imageROI,  keypoints);
-	SIFT  siftF(10000, 3); //n개의 포인트 detect
+	SIFT  siftF(10000, 31); //n개의 포인트 detect
 	siftF.detect(imageROI,  keypoints);
 	//KeyPointsFilter::retainBest( keypoints,1000); //retainbest 로 n개를 걸러냄
 	cout << "keypoints.size()=" <<  keypoints.size() << endl;
