@@ -13,18 +13,35 @@
 using namespace cv;
 using namespace std;
 
+void onMouse(int event, int x, int y, int flags, void* param);
 void thinningIteration(cv::Mat& im, int iter);
 void thinning(cv::Mat& im);
 
 int main()
 {
 	Mat srcImage = imread("image.jpg", IMREAD_GRAYSCALE); //srcImage : 원본이미지
+	Mat mouseimage =srcImage.clone();
+	
+	imshow("mouseimage",mouseimage);
+	setMouseCallback("mouseimage", onMouse,  (void *)&mouseimage);
+	//resize(mouseimage,mouseimage,Size(1000,800));
+	waitKey();
+
+	int x,y,disx,disy;
+	cout << "x : " ;
+	cin >> x ;
+	cout << endl << "y : ";
+	cin >> y;
+	cout <<endl<<"disx : " ;
+	cin >> disx;
+	cout <<endl<<"disy : ";
+	cin >> disy;
 
 	if( srcImage.empty() )
 		return -1;
 
 	cout << srcImage.size() <<endl;
-	Mat imageROI=srcImage(Rect(1300,1100,700,300)); //imageROI : 영역확대이미지
+	Mat imageROI=srcImage(Rect(x,y,disx,disy)); //imageROI : 영역확대이미지
 
 
 	vector<KeyPoint> keypoints;
@@ -83,10 +100,6 @@ int main()
 	Mat thrImage;
 	threshold(imageROI,thrImage, 120, 255, THRESH_BINARY_INV);
 	imwrite("thrImage.jpg",thrImage);
-	//Mat rthrImage;
-	//resize(thrImage,rthrImage,Size(1000,800));
-	//imshow("thr_imag",rthrImage);
-	//waitKey();
 
 	vector <KeyPoint> keypoints_1;
 
@@ -112,11 +125,7 @@ int main()
 	
 	
 		Mat kernel = thrImage(Rect(key_x,key_y,3,3));
-		
-		//circle(closrcImage, element.pt, cvRound(element.size/2), 
-		//	             Scalar(rand()%256,rand()%256,rand()%256), 2);
 
-		
 		int nwhite=0;
 		for(int p=0;p<3;p++)
 		{
@@ -129,14 +138,6 @@ int main()
 			}
 		}
 
-		//Mat cloim;
-		//closrcImage.copyTo(cloim);
-		//rectangle(cloim,Rect(key_x,key_y,3,3),Scalar(0,0,255),1);
-		//resize(cloim,cloim,Size(1000,800));
-		//imshow("thr_imag",cloim);
-		//waitKey();
-
-		//  && element.response >= 0.04
 		if(nwhite ==9)
 			keypoints_1.push_back(element);
 	}  
@@ -152,16 +153,8 @@ int main()
 		KeyPoint element;
 		
 		element = keypoints_1[k];
-		//cout << element.response <<endl;
 		circle(closrcImage, element.pt, 2, 
 			             Scalar(0,0,255), -1);
-		//Mat closrcImage2;
-		//closrcImage.copyTo(closrcImage2);
-		//circle(closrcImage2, element.pt, 2, 
-		//	             Scalar(0,0,255), 2);
-		//resize(closrcImage2,closrcImage2,Size(1000,800));
-		//imshow("final",closrcImage2);
-		//waitKey();
 	}
 
 	resize(closrcImage,closrcImage,Size(1000,800));
@@ -211,39 +204,10 @@ int main()
 
 		if(nwhite <=3)
 		{
-			//if(!(float(kernel.at<uchar>(0,0))==0 && float(kernel.at<uchar>(0,3))==0 && float(kernel.at<uchar>(0,6))==0) &&
-			//	!(float(kernel.at<uchar>(0,0))==0 && float(kernel.at<uchar>(1,0))==0 && float(kernel.at<uchar>(2,0))==0) &&
-			//	!(float(kernel.at<uchar>(2,0))==0 && float(kernel.at<uchar>(2,3))==0 && float(kernel.at<uchar>(2,6))==0) &&
-			//	!(float(kernel.at<uchar>(0,6))==0 && float(kernel.at<uchar>(1,6))==0 && float(kernel.at<uchar>(2,6))==0) &&
-			//	!(float(kernel.at<uchar>(0,0))==255 && float(kernel.at<uchar>(2,6))==255)&&
-			//	!(float(kernel.at<uchar>(0,6))==255 && float(kernel.at<uchar>(2,0))==255))
-			//{
-				
-				//Mat key_circleimage;
-				//Mat clokernel;
-				//image.copyTo(key_circleimage);
-				//kernel.copyTo(clokernel);
-				//rectangle(key_circleimage,Rect(keypoints[k].pt.x-1,keypoints[k].pt.y-1,3,3),Scalar(0,0,255),1);
-				//resize(key_circleimage,key_circleimage,Size(900,900));
-				//resize(clokernel,clokernel,Size(300,300));
-				//imshow("key_circleimage",key_circleimage);
-				//imshow("clokernel",clokernel);
-				//
-				//waitKey();
+
 				keypoints_2.push_back(element);
-			//}
 		}
 
-		//if(nwhite >=15)
-		//{
-		//
-		//	if(!(float(kernel.at<uchar>(0,0))==255 && float(kernel.at<uchar>(0,8))==0 && float(kernel.at<uchar>(2,0))==0 &&float(kernel.at<uchar>(2,8))==255)
-		//		&& !(float(kernel.at<uchar>(0,0))==0 && float(kernel.at<uchar>(0,8))==255 && float(kernel.at<uchar>(2,0))==255 &&float(kernel.at<uchar>(2,8))==0))
-		//	{
-		//		keypoints_2.push_back(element);
-	 	//
-		//	}
-		//}
 	}
 
 	Mat closrcImage2; //closrcImage : circle를 위한 복사이미지
@@ -255,24 +219,34 @@ int main()
 		KeyPoint element;
 		
 		element = keypoints_2[k];
-		//cout << element.response <<endl;
 		circle(closrcImage2, element.pt, 2, 
 			             Scalar(0,0,255), -1);
-		//Mat closrcImage2;
-		//closrcImage.copyTo(closrcImage2);
-		//circle(closrcImage2, element.pt, 2, 
-		//	             Scalar(0,0,255), 2);
-		//resize(closrcImage2,closrcImage2,Size(1000,800));
-		//imshow("final",closrcImage2);
-		//waitKey();
+
 	}	
 
 	resize(closrcImage2,closrcImage2,Size(1000,800));
 	imshow("final",closrcImage2);
+
 	waitKey();
 
 
 	return 0;
+}
+
+void onMouse(int event, int x, int y, int flags, void* param)
+{
+	Mat *pMat = (Mat *)param;
+	Mat image = Mat(*pMat);
+	switch(event)
+	{
+ 	case EVENT_LBUTTONDOWN:
+		{
+			rectangle(image, Point(x-5, y-5), Point(x+5, y+5), Scalar(255, 0, 0),2);
+			cout << x-5 << "," << y-5 <<endl;
+		}
+		break; 
+	}
+	imshow("mouseimage", image);
 }
 
 void thinningIteration(cv::Mat& im, int iter)
