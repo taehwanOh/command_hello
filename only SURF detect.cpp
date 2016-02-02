@@ -48,7 +48,7 @@ int main()
  
 	//SurfFeatureDetector  surF(10);
 	//surF.detect(imageROI,  keypoints);
-	SIFT  siftF(10000, 31); //n개의 포인트 detect
+	SIFT  siftF(20000, 31); //n개의 포인트 detect
 	siftF.detect(imageROI,  keypoints);
 	//KeyPointsFilter::retainBest( keypoints,1000); //retainbest 로 n개를 걸러냄
 	cout << "keypoints.size()=" <<  keypoints.size() << endl;
